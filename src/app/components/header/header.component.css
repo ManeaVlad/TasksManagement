@@ -1,0 +1,38 @@
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menuButton {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.sidenav {
+  width: 200px;
+  box-shadow: 3px 0 6px rgba(0, 0, 0, 0.24);
+}
+
+.sidenav-container {
+  height: 100%;
+}
+
+.hidden {
+  display: none;
+}
+/*
+SAU
+@media (min-width: 768px) {
+  .sidenav {
+    display: none;
+  }
+} */
+
+ul {
+  display: flex;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
