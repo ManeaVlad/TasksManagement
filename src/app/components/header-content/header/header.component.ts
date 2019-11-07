@@ -1,16 +1,17 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { AuthService } from "../auth/auth.service";
+import { Component, OnInit, OnDestroy, Input } from "@angular/core";
+import { AuthService } from "../../auth/auth.service";
 import { Subscription, Observable } from "rxjs";
 import {
   BreakpointState,
   BreakpointObserver,
   Breakpoints
 } from "@angular/cdk/layout";
+import { HeaderHelpers } from "./header.helpers";
 
 @Component({
   selector: "app-header",
   templateUrl: "./header.component.html",
-  styleUrls: ["./header.component.css"]
+  styleUrls: ["./header.component.scss"]
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
@@ -18,6 +19,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     Breakpoints.Handset
   );
   private authListenerSubs: Subscription;
+  @Input() sidenav;
+  @Input() drawer;
+  @Input() matDrawerShow;
+  @Input() sidebar;
+  headerHelpers = HeaderHelpers;
 
   constructor(
     private authService: AuthService,

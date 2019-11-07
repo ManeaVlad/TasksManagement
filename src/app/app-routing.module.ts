@@ -12,7 +12,12 @@ const routes: Routes = [
     component: CreateComponent,
     canActivate: [AuthGuard]
   },
-  { path: "auth", loadChildren: "./components/auth/auth.module#AuthModule" }
+  { path: "auth", loadChildren: "./components/auth/auth.module#AuthModule" },
+  {
+    path: "user",
+    loadChildren:
+      "./components/header-content/header-content.module#HeaderModule"
+  }
 ];
 
 @NgModule({

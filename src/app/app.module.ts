@@ -4,23 +4,24 @@ import { NgModule } from "@angular/core";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 
 import { AppComponent } from "./app.component";
-import { HeaderComponent } from "./components/header/header.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { AuthInterceptor } from "./components/auth/auth-interceptor";
 import { ErrorInterceptor } from "./error-interceptor";
 import { ErrorComponent } from "./components/error/error.component";
 import { AngularMaterialModule } from "./angular-material.module";
 import { PostsModule } from "./components/posts/posts.module";
+import { HeaderModule } from "./components/header-content/header-content.module";
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, ErrorComponent],
+  declarations: [AppComponent, ErrorComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AngularMaterialModule,
-    PostsModule
+    PostsModule,
+    HeaderModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

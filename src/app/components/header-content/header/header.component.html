@@ -30,6 +30,10 @@
         <a class="menuButton" routerLink="/">Home</a>
       </span>
       <span class="spacer"></span>
+      <app-notifications-header
+        [notifications]="headerHelpers?.notifications"
+      ></app-notifications-header>
+      <app-user-menu [currentUser]="headerHelpers?.currentUser"></app-user-menu>
       <ul>
         <li *ngIf="userIsAuthenticated">
           <a mat-button routerLink="/create" routerLinkActive="mat-accent"
