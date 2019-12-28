@@ -29,6 +29,8 @@
       >
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit" *ngIf="!isLoading">Login</button>
+    <button mat-raised-button color="primary" type="button" (click) = "googleAuth()">Google</button>
+    <!-- <a href="http://localhost:3000/api/auth/google" mat-raised-button>Google</a> -->
     <a
       mat-raised-button
       color="primary"

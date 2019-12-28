@@ -70,8 +70,6 @@ export class PostsService {
       .subscribe(responseData => {
         this.router.navigate(["/"]);
       });
-    // this.posts.push(post);
-    // this.postsUpdated.next([...this.posts]);  OPTIMISTIC UPDATE
   }
 
   updatePost(id: string, title: string, content: string, image: File | string) {

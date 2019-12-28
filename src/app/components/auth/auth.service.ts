@@ -33,9 +33,8 @@ export class AuthService {
     return this.userId;
   }
 
-  createUser(email: string, password: string) {
-    const authData: AuthData = { email, password };
-    this.http.post(BACKEND_URL + "signup", authData).subscribe(
+  createUser(body: AuthData) {
+    this.http.post(BACKEND_URL + "signup", body).subscribe(
       () => {
         this.router.navigate(["/"]);
       },
@@ -45,15 +44,44 @@ export class AuthService {
     );
   }
 
-  login(email: string, password: string) {
-    const authData: AuthData = { email, password };
+  login(body: AuthData) {
     this.http
       .post<{ token: string; expiresIn: number; userId: string }>(
         BACKEND_URL + "login",
-        authData
+        body
       )
       .subscribe(
         response => {
+          const token = response.token;
+          this.token = token;
+          if (token) {
+            const expiresInDuration = response.expiresIn;
+            this.setAuthTimer(expiresInDuration);
+            this.isAuthenticated = true;
+            this.userId = response.userId;
+            this.authStatusListener.next(true);
+            const now = new Date();
+            const expirationDate = new Date(
+              now.getTime() + expiresInDuration * 1000
+            );
+            this.saveAuthData(token, expirationDate, this.userId);
+            this.router.navigate(["/"]);
+          }
+        },
+        error => {
+          this.authStatusListener.next(false);
+        }
+      );
+  }
+
+  googleAuthUser() {
+    this.http
+      .get<{ token: string; expiresIn: number; userId: string }>(
+        environment.apiUrl + "/auth/google"
+      )
+      .subscribe(
+        response => {
+          console.log("response");
           const token = response.token;
           this.token = token;
           if (token) {

@@ -3,21 +3,26 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 exports.createUser = (req, res, next) => {
+  User.findOne({ "local.email": req.body.email }).then(user => {
+    if (user) {
+      return res.status(400).json({
+        message: "User already created!"
+      });
+    }
+  });
   bcrypt.hash(req.body.password, 10).then(hash => {
-    const user = new User({
-      email: req.body.email,
-      password: hash
-    });
+    const user = new User();
+    user.local.email = req.body.email;
+    user.local.password = hash;
     user
       .save()
       .then(result => {
         res.status(201).json({
-          message: "User created!",
-          result: result
+          message: "User created succesfully!"
         });
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           message: "Invalid authentication credentials!"
         });
       });
@@ -26,20 +31,20 @@ exports.createUser = (req, res, next) => {
 
 exports.userLogin = (req, res, next) => {
   let fetchedUser;
-  User.findOne({ email: req.body.email })
+  User.findOne({ "local.email": req.body.email })
     .then(user => {
       if (!user) {
         return res.status(401).json({
-          message: "Auth failed!"
+          message: "Invalid user email!"
         });
       }
       fetchedUser = user;
-      return bcrypt.compare(req.body.password, user.password);
+      return bcrypt.compare(req.body.password, user.local.password);
     })
     .then(result => {
       if (!result) {
         return res.status(401).json({
-          message: "Auth failed!"
+          message: "Invalid authentication credentials!"
         });
       }
       const token = jwt.sign(
