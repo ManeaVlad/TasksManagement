@@ -36,3 +36,17 @@ ul {
 .spacer {
   flex: 1 1 auto;
 }
+
+.menuButton img{
+  width: auto;
+  height: auto;
+  max-height: 200px;
+  max-width: 150px;
+  padding-top: 15px;
+  filter: brightness(1.2);
+  margin: 0;
+}
+
+.menuButton img:hover {
+  filter: brightness(1.4);
+}

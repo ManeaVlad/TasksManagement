@@ -1,42 +1,92 @@
-<mat-card>
+<div fxLayout="center" fxLayoutAlign="center center">
   <mat-spinner *ngIf="isLoading"></mat-spinner>
-  <form (submit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
-    <mat-form-field>
-      <input
-        matInput
-        name="email"
-        ngModel
-        type="email"
-        placeholder="E-Mail"
-        #emailInput="ngModel"
-        required
-        email
-      />
-      <mat-error *ngIf="emailInput.invalid">Enter a valid email!</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input
-        type="password"
-        matInput
-        name="password"
-        ngModel
-        placeholder="Password"
-        #passwordInput="ngModel"
-        required
-      />
-      <mat-error *ngIf="passwordInput.invalid"
-        >Enter a valid password.</mat-error
+  <mat-card fxLayout="column" fxLayoutAlign="center center">
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <form
+        (submit)="onLogin(loginForm)"
+        #loginForm="ngForm"
+        *ngIf="!isLoading"
+        #formLogin="ngForm"
+        class="form-container"
       >
-    </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" *ngIf="!isLoading">Login</button>
-    <button mat-raised-button color="primary" type="button" (click) = "googleAuth()">Google</button>
-    <!-- <a href="http://localhost:3000/api/auth/google" mat-raised-button>Google</a> -->
-    <a
-      mat-raised-button
-      color="primary"
-      routerLink="/signup"
-      routerLinkActive="mat-accent"
-      >Sign Up</a
-    >
-  </form>
-</mat-card>
+        <mat-form-field>
+          <input
+            matInput
+            name="email"
+            ngModel
+            type="email"
+            placeholder="E-Mail"
+            #emailInput="ngModel"
+            required
+            email
+          />
+          <div *ngIf="formLogin.submitted && emailInput.invalid">
+            <mat-error *ngIf="emailInput.errors.required"
+              >Email is required</mat-error
+            >
+            <mat-error *ngIf="emailInput.errors.email"
+              >Email must be a valid email address</mat-error
+            >
+          </div>
+        </mat-form-field>
+        <mat-form-field>
+          <input
+            type="password"
+            matInput
+            name="password"
+            ngModel
+            placeholder="Password"
+            #passwordInput="ngModel"
+            required
+            minlength="6"
+          />
+          <div *ngIf="formLogin.submitted && passwordInput.invalid">
+            <mat-error *ngIf="passwordInput.errors.required"
+              >Password is required</mat-error
+            >
+            <mat-error *ngIf="passwordInput.errors.minlength"
+              >Password must be at least 6 characters</mat-error
+            >
+          </div>
+        </mat-form-field>
+        <button
+          mat-button
+          color="primary"
+          type="submit"
+          *ngIf="!isLoading"
+          class="btn-normal"
+        >
+          Login
+        </button>
+        <div class="line-text"><span class="line-text-back">or</span></div>
+        <a
+          href="http://localhost:3000/api/auth/google"
+          mat-button
+          class="btn-normal"
+        >
+          <img
+            class="img-google"
+            alt="Google sign-in"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+          />Login With Google</a
+        >
+        <p class="center-text">Don't have an account?</p>
+        <a
+          mat-button
+          color="primary"
+          routerLink="/auth/signup"
+          routerLinkActive="mat-accent"
+          class="btn-normal"
+          >Sign Up</a
+        >
+        <div class="logo-image" fxLayout="column" fxLayoutAlign="center center">
+          <img
+            src="http://localhost:3000/images/VERTICAL-LOGO-NO-JIRA.png"
+            alt="Vertical Logo"
+          />
+          <!-- have to add in DB -->
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</div>

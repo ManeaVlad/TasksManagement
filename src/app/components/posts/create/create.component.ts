@@ -97,6 +97,7 @@ export class CreateComponent implements OnInit, OnDestroy {
         this.form.value.content,
         this.form.value.image
       );
+      console.log(this.form.value.image);
     } else {
       this.postsService.updatePost(
         this.postId,

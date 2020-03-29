@@ -1,31 +1,120 @@
-<mat-card>
-  <mat-spinner *ngIf="isLoading"></mat-spinner>
-  <form (submit)="onSignup(signupForm)" #signupForm="ngForm" *ngIf="!isLoading">
-    <mat-form-field>
-      <input
-        matInput
-        name="email"
-        ngModel
-        type="email"
-        placeholder="E-Mail"
-        #emailInput="ngModel"
-        required
-        email
-      />
-      <mat-error *ngIf="emailInput.invalid">Enter a valid email!</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input
-        type="password"
-        matInput
-        name="password"
-        ngModel
-        placeholder="Password"
-        #passwordInput="ngModel"
-        required
-      />
-      <mat-error *ngIf="passwordInput.invalid">Enter a valid password.</mat-error>
-    </mat-form-field>
-    <button mat-raised-button [disabled]="passwordInput.invalid || emailInput.invalid" color="primary" type="submit" *ngIf="!isLoading">Sign Up</button>
-  </form>
-</mat-card>
+<div fxLayout="center" fxLayoutAlign="center center">
+  <mat-card fxLayout="center" fxLayoutAlign="center center">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <div fxLayout="center" fxLayoutAlign="center center">
+      <form
+        (submit)="onSignup()"
+        *ngIf="!isLoading"
+        #formSignup="ngForm"
+        class="form-container"
+        [formGroup]="form"
+      >
+        <mat-form-field>
+          <input
+            matInput
+            name="email"
+            type="email"
+            placeholder="E-Mail"
+            spellcheck="false"
+            #email
+            formControlName="email"
+            required
+          />
+          <mat-hint>
+            Email will never be shared or sold.
+          </mat-hint>
+          <mat-error>
+            {{ formErrors["email"] }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input
+            matInput
+            name="userName"
+            type="text"
+            placeholder="Username"
+            spellcheck="false"
+            #userName
+            formControlName="userName"
+            required
+          />
+          <mat-hint>
+            Username can not be changed.
+          </mat-hint>
+          <mat-error>
+            {{ formErrors["userName"] }}
+          </mat-error>
+        </mat-form-field>
+        <div formGroupName="passwordsGroup">
+        <mat-form-field>
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            matInput
+            name="password"
+            spellcheck="false"
+            ngModel
+            placeholder="Password"
+            formControlName="password"
+            required
+          />
+          <button mat-icon-button tabindex="-1" matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide Password'" [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-hint>Password minimum length 6, requires one letter, one number and one special character.</mat-hint>
+          <mat-error>{{ formErrors['password'] }}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            matInput
+            name="confirmPassword"
+            spellcheck="false"
+            ngModel
+            placeholder="Confirm Password"
+            [errorStateMatcher]="errorMatcher"
+            formControlName="confirmPassword"
+            required
+          />
+          <button mat-icon-button tabindex="-1" matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide Password'" [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-hint>Confirm Password minimum length 6, requires one letter, one number and one special character.</mat-hint>
+          <mat-error>{{ formErrors['confirmPassword'] }}</mat-error>
+        </mat-form-field>
+      </div>
+      <button
+          mat-button
+          color="primary"
+          type="button"
+          *ngIf="!isLoading"
+          class="btn-normal"
+        >
+          Add Company/Team
+        </button>
+        <p class="font-size">
+          By clicking Sign Up, you are indicating that you have read and
+          acknowledge the
+          <a href="https://www.termsandcondiitionssample.com/"
+            >Terms of Service</a
+          >.
+        </p>
+        <button
+          mat-button
+          color="primary"
+          type="submit"
+          *ngIf="!isLoading"
+          class="btn-normal"
+        >
+          Sign Up
+        </button>
+        <div class="logo-image" fxLayout="center" fxLayoutAlign="center center">
+          <img
+            src="http://localhost:3000/images/VERTICAL-LOGO-NO-JIRA.png"
+            alt="Vertical Logo"
+          />
+          <!-- have to add in DB -->
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</div>

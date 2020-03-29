@@ -11,6 +11,7 @@ import { ErrorComponent } from "./components/error/error.component";
 import { AngularMaterialModule } from "./angular-material.module";
 import { PostsModule } from "./components/posts/posts.module";
 import { HeaderModule } from "./components/header-content/header-content.module";
+import { TasksModule } from "./components/tasks/tasks.module";
 
 @NgModule({
   declarations: [AppComponent, ErrorComponent],
@@ -21,7 +22,8 @@ import { HeaderModule } from "./components/header-content/header-content.module"
     HttpClientModule,
     AngularMaterialModule,
     PostsModule,
-    HeaderModule
+    HeaderModule,
+    TasksModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

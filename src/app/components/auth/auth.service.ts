@@ -5,7 +5,7 @@ import { Subject } from "rxjs";
 import { Router } from "@angular/router";
 import { environment } from "../../../environments/environment";
 
-const BACKEND_URL = environment.apiUrl + "/users/";
+const BACKEND_URL = "http://localhost:3000/api" + "/users/";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -77,11 +77,10 @@ export class AuthService {
   googleAuthUser() {
     this.http
       .get<{ token: string; expiresIn: number; userId: string }>(
-        environment.apiUrl + "/auth/google"
+        "http://localhost:3000/api" + "/auth/google"
       )
       .subscribe(
         response => {
-          console.log("response");
           const token = response.token;
           this.token = token;
           if (token) {

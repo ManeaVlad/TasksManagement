@@ -11,7 +11,10 @@ import {
   MatSidenavModule,
   MatListModule,
   MatIconModule,
-  MatChipsModule
+  MatChipsModule,
+  MatSelectModule,
+  MatSortModule,
+  MatTableModule
 } from "@angular/material";
 import { LayoutModule } from "@angular/cdk/layout";
 import { FlexLayoutModule } from "@angular/flex-layout";
@@ -39,6 +42,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatListModule,
     MatIconModule,
     MatChipsModule,
+    MatSelectModule,
+    MatSortModule,
+    MatTableModule,
+
     LayoutModule,
     FlexLayoutModule,
     PerfectScrollbarModule

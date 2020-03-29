@@ -10,7 +10,18 @@
   >
     <mat-toolbar color="primary">Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/create" routerLinkActive="mat-accent"
+      <a
+        mat-list-item
+        routerLink="/create-task"
+        routerLinkActive="mat-accent"
+        *ngIf="userIsAuthenticated"
+        >Create Task</a
+      >
+      <a
+        mat-list-item
+        routerLink="/create"
+        routerLinkActive="mat-accent"
+        *ngIf="userIsAuthenticated"
         >Create post</a
       >
     </mat-nav-list>
@@ -26,20 +37,30 @@
       >
         <mat-icon aria-label="Sidenav toggle icon">menu</mat-icon>
       </button>
-      <span>
-        <a class="menuButton" routerLink="/">Home</a>
-      </span>
-      <span class="spacer"></span>
-      <app-notifications-header
-        [notifications]="headerHelpers?.notifications"
-      ></app-notifications-header>
-      <app-user-menu [currentUser]="headerHelpers?.currentUser"></app-user-menu>
       <ul>
+        <span>
+          <a class="menuButton" routerLink="/">
+            <img
+              src="http://localhost:3000/images/HORIZONTAL-LOGO-NO-JIRA.png"
+              alt="Horizontal Logo"
+            />
+            <!-- have to add in DB -->
+          </a>
+        </span>
+      </ul>
+      <span class="spacer"></span>
+      <ul [ngClass]="{ hidden: (isHandset | async)!.matches }">
+        <li *ngIf="userIsAuthenticated">
+          <a mat-button routerLink="/create-task" routerLinkActive="mat-accent"
+            >Create Task</a
+          >
+        </li>
         <li *ngIf="userIsAuthenticated">
           <a mat-button routerLink="/create" routerLinkActive="mat-accent"
             >Create post</a
           >
         </li>
+
         <li *ngIf="!userIsAuthenticated">
           <a mat-button routerLink="/auth/login" routerLinkActive="mat-accent"
             >Login</a
@@ -50,10 +71,15 @@
             >Sign Up</a
           >
         </li>
-        <li *ngIf="userIsAuthenticated">
-          <button mat-button (click)="onLogout()">Logout</button>
-        </li>
       </ul>
+      <app-notifications-header
+          [notifications]="headerHelpers?.notifications"
+          *ngIf="userIsAuthenticated"
+        ></app-notifications-header>
+        <app-user-menu
+          [currentUser]="headerHelpers?.currentUser"
+          *ngIf="userIsAuthenticated"
+        ></app-user-menu>
     </mat-toolbar>
     <ng-content></ng-content>
   </mat-sidenav-content>
