@@ -1,8 +1,18 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const nodemailer = require("nodemailer");
+const _ = require("lodash");
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: "maneavlad1997@gmail.com",
+    pass: "Energystar007"
+  }
+});
+const EMAIL_SECRET = "asdafafeafraefaefea";
 
-exports.createUser = (req, res, next) => {
+exports.createUser = (req, res) => {
   User.findOne({ "local.email": req.body.email }).then(user => {
     if (user) {
       return res.status(400).json({
@@ -10,10 +20,28 @@ exports.createUser = (req, res, next) => {
       });
     }
   });
-  bcrypt.hash(req.body.password, 10).then(hash => {
+  bcrypt.hash(req.body.passwordsGroup.password, 10).then(hash => {
     const user = new User();
     user.local.email = req.body.email;
     user.local.password = hash;
+    jwt.sign(
+      {
+        user: _.pick(user, "id")
+      },
+      EMAIL_SECRET,
+      {
+        expiresIn: "1d"
+      },
+      (err, emailToken) => {
+        const url = `http://localhost:3000/confirmation/${emailToken}`;
+        transporter.sendMail({
+          from: "maneavlad1997@gmail.comm",
+          to: user.local.email,
+          subject: "Confirmation Email from NO-JIRA",
+          html: `<h1>NO-JIRA team thanks you for using our service</h1><p>Please click this email to confirm your email: <a href="${url}">${url}</a></p>`
+        });
+      }
+    );
     user
       .save()
       .then(result => {
@@ -22,6 +50,7 @@ exports.createUser = (req, res, next) => {
         });
       })
       .catch(err => {
+        console.log(err);
         res.status(400).json({
           message: "Invalid authentication credentials!"
         });
@@ -36,6 +65,11 @@ exports.userLogin = (req, res, next) => {
       if (!user) {
         return res.status(401).json({
           message: "Invalid user email!"
+        });
+      }
+      if (!user.local.confirmed) {
+        return res.status(401).json({
+          message: "Please confirm your email to login"
         });
       }
       fetchedUser = user;

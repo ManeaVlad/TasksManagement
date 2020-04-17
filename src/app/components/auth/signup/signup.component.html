@@ -18,7 +18,6 @@
             spellcheck="false"
             #email
             formControlName="email"
-            required
           />
           <mat-hint>
             Email will never be shared or sold.
@@ -36,7 +35,6 @@
             spellcheck="false"
             #userName
             formControlName="userName"
-            required
           />
           <mat-hint>
             Username can not be changed.
@@ -46,51 +44,93 @@
           </mat-error>
         </mat-form-field>
         <div formGroupName="passwordsGroup">
-        <mat-form-field>
-          <input
-            [type]="hidePassword ? 'password' : 'text'"
-            matInput
-            name="password"
-            spellcheck="false"
-            ngModel
-            placeholder="Password"
-            formControlName="password"
-            required
-          />
-          <button mat-icon-button tabindex="-1" matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide Password'" [attr.aria-pressed]="hidePassword">
-            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-          <mat-hint>Password minimum length 6, requires one letter, one number and one special character.</mat-hint>
-          <mat-error>{{ formErrors['password'] }}</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <input
-            [type]="hidePassword ? 'password' : 'text'"
-            matInput
-            name="confirmPassword"
-            spellcheck="false"
-            ngModel
-            placeholder="Confirm Password"
-            [errorStateMatcher]="errorMatcher"
-            formControlName="confirmPassword"
-            required
-          />
-          <button mat-icon-button tabindex="-1" matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide Password'" [attr.aria-pressed]="hidePassword">
-            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-          <mat-hint>Confirm Password minimum length 6, requires one letter, one number and one special character.</mat-hint>
-          <mat-error>{{ formErrors['confirmPassword'] }}</mat-error>
-        </mat-form-field>
-      </div>
-      <button
+          <mat-form-field>
+            <input
+              [type]="hidePassword ? 'password' : 'text'"
+              matInput
+              name="password"
+              spellcheck="false"
+              ngModel
+              placeholder="Password"
+              formControlName="password"
+            />
+            <button
+              mat-icon-button
+              type="button"
+              tabindex="-1"
+              matSuffix
+              (click)="hidePassword = !hidePassword"
+              [attr.aria-label]="'Hide Password'"
+              [attr.aria-pressed]="hidePassword"
+            >
+              <mat-icon>{{
+                hidePassword ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+            <mat-hint
+              >Password minimum length 6, requires one letter, one number and
+              one special character.</mat-hint
+            >
+            <mat-error>{{ formErrors["password"] }}</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              [type]="hidePassword ? 'password' : 'text'"
+              matInput
+              name="confirmPassword"
+              spellcheck="false"
+              ngModel
+              placeholder="Confirm Password"
+              [errorStateMatcher]="errorMatcher"
+              formControlName="confirmPassword"
+            />
+            <button
+              mat-icon-button
+              type="button"
+              tabindex="-1"
+              matSuffix
+              (click)="hidePassword = !hidePassword"
+              [attr.aria-label]="'Hide Password'"
+              [attr.aria-pressed]="hidePassword"
+            >
+              <mat-icon>{{
+                hidePassword ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+            <mat-hint
+              >Confirm Password minimum length 6, requires one letter, one
+              number and one special character.</mat-hint
+            >
+            <mat-error>{{
+              formErrors["confirmPassword"]
+                ? formErrors["confirmPassword"]
+                : formErrors["passwordsGroup"]
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+        <button
           mat-button
           color="primary"
           type="button"
           *ngIf="!isLoading"
-          class="btn-normal"
+          class="btn-inner"
+          (click)="showCompanyInput = !showCompanyInput"
         >
           Add Company/Team
         </button>
+        <mat-form-field *ngIf="showCompanyInput === true">
+          <input
+            type="text"
+            matInput
+            name="companyName"
+            spellcheck="false"
+            ngModel
+            placeholder="Company/Team Name"
+            formControlName="companyName"
+          />
+          <mat-hint>Username can not be changed.</mat-hint>
+          <mat-error>{{ formErrors["companyName"] }}</mat-error>
+        </mat-form-field>
         <p class="font-size">
           By clicking Sign Up, you are indicating that you have read and
           acknowledge the

@@ -1,4 +1,4 @@
-<div class="form">
+<!--<div class="form">
   <mat-form-field floatPlaceholder="never" color="accent">
     <input matInput #filter placeholder="Filter issues">
   </mat-form-field>
@@ -35,7 +35,6 @@
     <mat-cell *matCellDef="let row"> {{row.updated_at}}</mat-cell>
   </ng-container>
 
-  <!-- actions -->
   <ng-container matColumnDef="actions">
     <mat-header-cell *matHeaderCellDef>
       <button mat-icon-button color="primary" (click)="addNewTask()">
@@ -43,15 +42,15 @@
       </button>
     </mat-header-cell>
 
-    <!-- <mat-cell *matCellDef="let row; let i=index;">
+     <mat-cell *matCellDef="let row; let i=index;">
       <button mat-icon-button color="accent" (click)="startEdit(i, row.id, row.title, row.state, row.url, row.created_at, row.updated_at)">
         <mat-icon aria-label="Edit">edit</mat-icon>
-      </button> -->
+      </button>
 
-      <!-- <button mat-icon-button color="accent" (click)="deleteItem(i, row.id, row.title, row.state, row.url)">
+       <button mat-icon-button color="accent" (click)="deleteItem(i, row.id, row.title, row.state, row.url)">
         <mat-icon aria-label="Delete">delete</mat-icon>
       </button>
-    </mat-cell> -->
+    </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -68,5 +67,5 @@
                [pageIndex]="0"
                [pageSize]="10"
                [pageSizeOptions]="[5, 10, 25, 100]">
-</mat-paginator>
+</mat-paginator>-->
 

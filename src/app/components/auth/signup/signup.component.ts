@@ -6,7 +6,7 @@ import {
   ElementRef,
   ViewChild
 } from "@angular/core";
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { FormComponent } from "../infrasturcture-forms/form-component";
 import { ErrorMatcher } from "../infrasturcture-forms/error-matcher";
 import { passwordsDoNotMatch } from "../infrasturcture-forms/passwords-do-not-match.validator";
@@ -34,11 +34,14 @@ export class SignupComponent extends FormComponent
   ) {
     super();
     this.validationMessages = {
+      companyName: {
+        maxlength: "User name maximum length is 15."
+      },
       userName: {
-        required: 'User name is required.',
-        minlength: 'User name minimum length is 6.',
-        maxlength: 'User name maximum length is 15.',
-        pattern: 'User name minimum length is 6.'
+        required: "User name is required.",
+        minlength: "User name minimum length is 6.",
+        maxlength: "User name maximum length is 15.",
+        pattern: "User name minimum length is 6."
       },
       password: {
         required: "Password is required.",
@@ -65,22 +68,27 @@ export class SignupComponent extends FormComponent
     };
 
     this.formErrors = {
-      userName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      passwordsGroup: ''
+      companyName: "",
+      userName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      passwordsGroup: ""
     };
   }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      userName: ["", [
-        Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(15),
-        Validators.pattern("^[a-zA-Z0-9]*$")
-      ]],
+      companyName: ["", [Validators.maxLength(15)]],
+      userName: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(15),
+          Validators.pattern("^[a-zA-Z0-9]*$")
+        ]
+      ],
       email: ["", [Validators.required, Validators.email]],
       passwordsGroup: this.formBuilder.group(
         {
@@ -128,6 +136,7 @@ export class SignupComponent extends FormComponent
       return;
     } else {
       this.isLoading = true;
+      console.log(this.form.value);
       this.authService.createUser(this.form.value);
     }
   }

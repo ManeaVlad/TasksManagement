@@ -44,7 +44,7 @@ export class AuthService {
     );
   }
 
-  login(body: AuthData) {
+  login(body) {
     this.http
       .post<{ token: string; expiresIn: number; userId: string }>(
         BACKEND_URL + "login",

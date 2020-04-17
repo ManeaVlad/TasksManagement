@@ -1,5 +1,7 @@
 mat-form-field {
   width: 100%;
+  display: block;
+  margin-top: 12px;;
 }
 
 mat-card {
@@ -24,6 +26,13 @@ mat-spinner {
   border-color: rgba(0, 0, 0, 0.2);
   padding: 0.5rem;
   display: block;
+  width: 100%;
+}
+
+.btn-inner {
+  border-color: rgba(0, 0, 0, 0.2);
+  display: block;
+  margin-top: 13px;
   width: 100%;
 }
 

@@ -12,6 +12,7 @@ import { AngularMaterialModule } from "./angular-material.module";
 import { PostsModule } from "./components/posts/posts.module";
 import { HeaderModule } from "./components/header-content/header-content.module";
 import { TasksModule } from "./components/tasks/tasks.module";
+import { ServicesModule } from "./components/services-page/services.module";
 
 @NgModule({
   declarations: [AppComponent, ErrorComponent],
@@ -23,7 +24,8 @@ import { TasksModule } from "./components/tasks/tasks.module";
     AngularMaterialModule,
     PostsModule,
     HeaderModule,
-    TasksModule
+    TasksModule,
+    ServicesModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

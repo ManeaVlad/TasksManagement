@@ -10,8 +10,10 @@ const jwtStrategy = require("./middleware/passport-jwt");
 const googleStrategy = require("./middleware/passport-google");
 const session = require("express-session");
 const User = require("./models/user");
+const jwt = require("jsonwebtoken");
 
 const app = express();
+const EMAIL_SECRET = "asdafafeafraefaefea";
 
 mongoose
   .connect(
@@ -66,6 +68,19 @@ app.use((req, res, next) => {
 app.use("/api/posts", postsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/auth", authRoutes);
+app.get("/confirmation/:token", async (req, res, next) => {
+  try {
+    const {
+      user: { id }
+    } = jwt.verify(req.params.token, EMAIL_SECRET);
+    await User.update({ _id: id }, { "local.confirmed": true });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error"
+    });
+  }
+  return res.redirect("http://localhost:4200/auth/login");
+});
 app.get("failure", (req, res, next) => {
   return res.redirect("http://localhost:4200/auth/login");
 });
