@@ -1,0 +1,83 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.ft-main-item ul{
+  border-right: 1px #777 solid;
+}
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+footer {
+  background-color: #fafafa;
+  color: #000;
+  line-height: 1.5;
+}
+footer a {
+  text-decoration: none;
+  color: #000;
+}
+a:hover {
+  text-decoration: underline;
+}
+.ft-title {
+  color: #000;
+  font-family: ’Merriweather’, serif;
+  font-size: 1.375rem;
+  padding-bottom: 0.625rem;
+}
+.ft-main {
+  display: flex;
+  flex-wrap: wrap;
+}
+.ft-main-item {
+  padding: 0.5rem;
+  min-width: 12.5rem;
+}
+@media only screen and (min-width: 29.8125rem) {
+  .ft-main {
+      justify-content: space-around;
+  }
+}
+@media only screen and (min-width: 77.5rem) {
+  .ft-main {
+      justify-content: space-evenly;
+  }
+}
+.ft-social-list {
+  display: flex;
+  justify-content: center;
+  padding-top: 4rem;
+}
+.ft-social-list li {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  font-size: 1.25rem;
+}
+.ft-legal {
+  padding: 0.9375rem 1.875rem;
+  background-color: #333;
+  color: #fff;
+}
+.ft-legal a {
+  color: #fff;
+}
+.ft-legal-list {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.ft-legal-list li {
+  margin: 0.125rem 0.625rem;
+  white-space: nowrap;
+}
+.ft-legal-list li:nth-last-child(2) {
+  flex: 1;
+}
+.ft-main-contact{
+  padding-top: 1rem;
+  padding-right: 4rem;
+}
+

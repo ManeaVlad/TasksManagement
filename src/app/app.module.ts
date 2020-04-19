@@ -13,6 +13,9 @@ import { PostsModule } from "./components/posts/posts.module";
 import { HeaderModule } from "./components/header-content/header-content.module";
 import { TasksModule } from "./components/tasks/tasks.module";
 import { ServicesModule } from "./components/services-page/services.module";
+import { DashboardModule } from "./components/dashboard/dasboard.module";
+import { FooterModule } from "./components/footer/footer.module";
+import { AuthModule } from "./components/auth/auth.module";
 
 @NgModule({
   declarations: [AppComponent, ErrorComponent],
@@ -25,8 +28,11 @@ import { ServicesModule } from "./components/services-page/services.module";
     PostsModule,
     HeaderModule,
     TasksModule,
-    ServicesModule
-  ],
+    ServicesModule,
+    DashboardModule,
+    FooterModule,
+    AuthModule
+    ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }

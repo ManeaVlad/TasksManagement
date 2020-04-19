@@ -7,9 +7,11 @@ import { ListTaskComponent } from "./components/tasks/list-task/list-task.compon
 import { ScrumboardComponent } from "./components/tasks/scrumboard/scrumboard.component";
 import { AuthGuard } from "./components/auth/auth.guard";
 import { ServicesComponent } from "./components/services-page/services.component";
+import { DashboardPageComponent } from "./components/dashboard/dashboard-page/dasboard-page.component";
 
 const routes: Routes = [
   { path: "services", component: ServicesComponent },
+  { path: "dashboard", component: DashboardPageComponent },
   { path: "", component: ListComponent },
   { path: "create", component: CreateComponent, canActivate: [AuthGuard] },
   {

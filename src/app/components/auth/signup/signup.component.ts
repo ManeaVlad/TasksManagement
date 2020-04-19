@@ -14,6 +14,7 @@ import { AuthService } from "../auth.service";
 import { Subscription } from "rxjs";
 
 @Component({
+  selector: "app-signup",
   templateUrl: "./signup.component.html",
   styleUrls: ["./signup.component.scss"]
 })

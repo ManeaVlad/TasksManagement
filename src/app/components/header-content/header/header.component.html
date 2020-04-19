@@ -2,7 +2,6 @@
   <mat-sidenav
     #drawer
     class="sidenav"
-    [ngClass]="{ hidden: !(isHandset | async)!.matches }"
     fixedInViewport="false"
     [attr.role]="isHandset ? 'dialog' : 'navigation'"
     [mode]="(isHandset | async)!.matches ? 'over' : 'side'"
@@ -33,7 +32,6 @@
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
-        *ngIf="(isHandset | async)!.matches"
       >
         <mat-icon aria-label="Sidenav toggle icon">menu</mat-icon>
       </button>

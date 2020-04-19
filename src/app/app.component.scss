@@ -1,4 +1,13 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 main {
   width: 80%;
   margin: 1rem auto;
+}
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+.container {
+  flex: 1;    /* same as flex-grow: 1; */
 }
