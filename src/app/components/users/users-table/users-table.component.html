@@ -1,0 +1,83 @@
+<mat-card class="mat-elevation-z8">
+  <mat-card-title>
+    <h1 class="mat-headline">Users Table</h1>
+  </mat-card-title>
+  <div class="search">
+    <button mat-raised-button (click)="openDialog()"><mat-icon>add</mat-icon></button>
+    <mat-form-field class="search-form" floatLabel="never">
+      <mat-label><mat-icon matP>search</mat-icon></mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchKey"
+        autocomplete="off"
+        (keyup)="applyFilter()"
+      />
+      <button
+        mat-button
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        *ngIf="searchKey"
+        (click)="onSearchClear()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <mat-table [dataSource]="usersData" matSort>
+    <ng-container matColumnDef="userName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Username
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{ user.userName }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Email
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{ user.email }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="companyName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Company/Team Name
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{ user.companyName }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="role">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Role
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{ user.role }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="isAdmin">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Admin
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{ user.isAdmin }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="activeUser">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Active User
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{ user.activeUser }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <button mat-icon-button color="primary">
+          <mat-icon>launch</mat-icon>
+        </button>
+        <button mat-icon-button color="warn">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+  <mat-paginator
+    [pageSize]="postsPerPage"
+    [pageSizeOptions]="pageSizeOptions"
+    showFirstLastButtons
+  ></mat-paginator>
+</mat-card>

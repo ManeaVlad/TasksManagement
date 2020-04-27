@@ -8,43 +8,49 @@ import { ScrumboardComponent } from "./components/tasks/scrumboard/scrumboard.co
 import { AuthGuard } from "./components/auth/auth.guard";
 import { ServicesComponent } from "./components/services-page/services.component";
 import { DashboardPageComponent } from "./components/dashboard/dashboard-page/dasboard-page.component";
+import { UsersTableComponent } from "./components/users/users-table/users-table.component";
+import { UsersCreateComponent } from "./components/users/users-create/users-create.component";
 
 const routes: Routes = [
   { path: "services", component: ServicesComponent },
-  { path: "dashboard", component: DashboardPageComponent },
+  {
+    path: "dashboard",
+    component: DashboardPageComponent,
+    canActivate: [AuthGuard],
+  },
   { path: "", component: ListComponent },
   { path: "create", component: CreateComponent, canActivate: [AuthGuard] },
+  { path: "users-table", component: UsersTableComponent },
+  { path: "users-create", component: UsersCreateComponent },
   {
     path: "edit/:postId",
     component: CreateComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   { path: "auth", loadChildren: "./components/auth/auth.module#AuthModule" },
   {
     path: "user",
     loadChildren:
-      "./components/header-content/header-content.module#HeaderModule"
+      "./components/header-content/header-content.module#HeaderModule",
   },
   {
     path: "create-task",
     component: CreateTaskComponent,
-    canActivate: [AuthGuard]
   },
   {
     path: "list-task",
     component: ListTaskComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: "scrumboard",
     component: ScrumboardComponent,
-    canActivate: [AuthGuard]
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [AuthGuard]
+  providers: [AuthGuard],
 })
 export class AppRoutingModule {}

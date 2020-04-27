@@ -1,23 +1,19 @@
 import { NgModule } from "@angular/core";
-import { ScrumboardComponent } from "./scrumboard/scrumboard.component";
-import { ListTaskComponent } from "./list-task/list-task.component";
-import { CreateTaskComponent } from "./create-task/create-task.component";
 import { AngularMaterialModule } from "src/app/angular-material.module";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-import { DndModule } from "ng2-dnd";
-
+import { UsersTableComponent } from "./users-table/users-table.component";
+import { UsersCreateComponent } from "./users-create/users-create.component";
 
 @NgModule({
-  declarations: [ScrumboardComponent, ListTaskComponent, CreateTaskComponent],
+  declarations: [UsersTableComponent, UsersCreateComponent],
   imports: [
     CommonModule,
     AngularMaterialModule,
     ReactiveFormsModule,
     RouterModule,
     FormsModule,
-    DndModule.forRoot()
-  ]
+  ],
 })
-export class TasksModule {}
+export class UsersModule {}

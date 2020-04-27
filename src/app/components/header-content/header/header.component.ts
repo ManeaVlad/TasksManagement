@@ -15,6 +15,7 @@ import { HeaderHelpers } from "./header.helpers";
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
+  userIsAdmin = false;
   isHandset: Observable<BreakpointState> = this.breakpointObserver.observe(
     Breakpoints.Handset
   );

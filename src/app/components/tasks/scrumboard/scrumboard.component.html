@@ -1,0 +1,106 @@
+<mat-card>
+  <div
+    fxLayout="column"
+    fxLayoutAlign="space-between stretch"
+    fxLayoutGap="10px"
+    fxFlexFill
+  >
+    <div
+      fxLayout="column"
+      style="background-color: white;"
+      fxLayoutAlign="space-between stretch"
+      fxLayoutGap="10px"
+      fxFlexFill
+    >
+      <mat-card-title>
+        <h4 class="mat-heading">
+          Scrumboard
+        </h4>
+      </mat-card-title>
+        <mat-select style="width: 30%;" [ngModel]="selectedDeviceObj"  (ngModelChange)="onChangeObj($event)">
+          <mat-option [value]="i" *ngFor="let i of deviceObjects">{{i.name}}</mat-option>
+        </mat-select>
+      <div fxFlexFill>
+        <div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column">
+          <div class="mat-elevation-z4" fxFlex="35">
+            <mat-toolbar>
+              <h5 class="mat-title">Pending</h5>
+            </mat-toolbar>
+            <div
+              dnd-sortable-container
+              [dropZones]="['boxers-zone']"
+              [sortableData]="tasks"
+            >
+              <mat-nav-list>
+                <mat-list-item
+                  *ngFor="let item of tasks; let i = index"
+                  class="list-group-item"
+                  dnd-sortable
+                  dnd-draggable
+                  dnd-droppable
+                  [dragData]="item"
+                  (onDropSuccess)="addToPending($event)"
+                  [sortableIndex]="i"
+                >
+                  {{ item }}
+                </mat-list-item>
+              </mat-nav-list>
+            </div>
+          </div>
+          <div class="mat-elevation-z4" fxFlex="35">
+            <mat-toolbar>
+              <h5 class="mat-title">In Progress</h5>
+            </mat-toolbar>
+            <div
+              dnd-sortable-container
+              [dropZones]="['boxers-zone']"
+              [sortableData]="developers"
+              style="height: 100%;"
+            >
+              <mat-list>
+                <mat-list-item
+                  *ngFor="let item1 of developers; let x = index"
+                  class="list-group-item"
+                  dnd-sortable
+                  dnd-draggable
+                  dnd-droppable
+                  [dragData]="item1"
+                  (onDropSuccess)="addToInProgress($event)"
+                  [sortableIndex]="x"
+                >
+                  {{ item1 }}
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+          <div class="mat-elevation-z4" fxFlex="35">
+            <mat-toolbar>
+              <h5 class="mat-title">Finished</h5>
+            </mat-toolbar>
+            <div
+              dnd-sortable-container
+              [dropZones]="['boxers-zone']"
+              [sortableData]="testers"
+              style="height: 100%;"
+            >
+              <mat-list>
+                <mat-list-item
+                  *ngFor="let item2 of testers; let y = index"
+                  class="list-group-item"
+                  dnd-sortable
+                  dnd-draggable
+                  dnd-droppable
+                  [dragData]="item2"
+                  (onDropSuccess)="addToFinished($event)"
+                  [sortableIndex]="y"
+                >
+                  {{ item2 }}
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-card>

@@ -1,0 +1,116 @@
+<h2 mat-dialog-title>Add User</h2>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<form
+  (submit)="onSignup()"
+  *ngIf="!isLoading"
+  #formSignup="ngForm"
+  class="form-container"
+  [formGroup]="form"
+>
+  <mat-dialog-content>
+    <mat-form-field>
+      <input
+        matInput
+        name="email"
+        type="email"
+        placeholder="E-Mail"
+        spellcheck="false"
+        #email
+        formControlName="email"
+      />
+      <mat-error>
+        {{ formErrors["email"] }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        name="userName"
+        type="text"
+        placeholder="Username"
+        spellcheck="false"
+        #userName
+        formControlName="userName"
+      />
+      <mat-error>
+        {{ formErrors["userName"] }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        [type]="hidePassword ? 'password' : 'text'"
+        matInput
+        name="password"
+        spellcheck="false"
+        ngModel
+        placeholder="Password"
+        formControlName="password"
+      />
+      <button
+        mat-icon-button
+        type="button"
+        tabindex="-1"
+        matSuffix
+        (click)="hidePassword = !hidePassword"
+        [attr.aria-label]="'Hide Password'"
+        [attr.aria-pressed]="hidePassword"
+      >
+        <mat-icon>{{
+          hidePassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+      <mat-error>{{ formErrors["password"] }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="text"
+        matInput
+        name="companyName"
+        spellcheck="false"
+        ngModel
+        placeholder="Company/Team Name"
+        formControlName="companyName"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="text"
+        matInput
+        name="role"
+        spellcheck="false"
+        ngModel
+        placeholder="Role"
+        formControlName="role"
+      />
+    </mat-form-field>
+    <mat-checkbox
+      matInput
+      name="isAdmin"
+      ngModel
+      formControlName="isAdmin"
+      class="btn-cancel"
+      >Admin</mat-checkbox
+    >
+    <mat-checkbox
+      matInput
+      name="activeUser"
+      ngModel
+      formControlName="activeUser"
+      class="btn-cancel"
+      >Active User</mat-checkbox
+    >
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button *ngIf="!isLoading" mat-button mat-dialog-close (click)="close()">
+      Cancel
+    </button>
+    <button
+      *ngIf="!isLoading"
+      mat-button
+      [mat-dialog-close]="true"
+      type="submit"
+    >
+      Save
+    </button>
+  </mat-dialog-actions>
+</form>
