@@ -16,4 +16,10 @@ router.get(
   authController.sendJwtToken
 );
 
+router.get(
+  "/authenticate",
+  passport.authenticate("jwt", { session: false }),
+  authController.authenticate
+);
+
 module.exports = router;

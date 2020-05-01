@@ -8,7 +8,7 @@ exports.configureJwtStrategy = () => {
   opts.secretOrKey = process.env.JWT_KEY;
   passport.use(
     new passportJwt.Strategy(opts, (payload, done) => {
-      User.findById(payload.userId, (err, user) => {
+      User.findById(payload.id, (err, user) => {
         if (err) {
           return done(err, false);
         }

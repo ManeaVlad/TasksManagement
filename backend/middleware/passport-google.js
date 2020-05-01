@@ -20,8 +20,8 @@ exports.configureGoogleStrategy = () => {
           google: {
             id: profile.id,
             token: accessToken,
-            displayName: profile.displayName,
-            email: profile.emails[0].value
+            userName: profile.displayName,
+            email: profile.emails[0].value,
           }
         });
         await newUser.save();

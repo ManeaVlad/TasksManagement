@@ -3,7 +3,7 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   UrlTree,
-  Router
+  Router,
 } from "@angular/router";
 import { Observable } from "rxjs";
 import { Injectable } from "@angular/core";
@@ -20,6 +20,10 @@ export class AuthGuard implements CanActivate {
     | UrlTree
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree> {
+    const token = route.queryParamMap.get("token");
+    if (token) {
+      this.authService.googleAuthUser(token);
+    }
     const isAuth = this.authService.getIsAuth();
     if (!isAuth) {
       this.router.navigate(["/login"]);

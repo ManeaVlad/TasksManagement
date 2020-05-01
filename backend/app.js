@@ -24,6 +24,7 @@ mongoose
   )
   .then(() => {
     console.log("Connected to Database");
+    console.log(process.env.MONGO_ATLAS_PW);
   })
   .catch(() => {
     console.log("Connection to Database failed!");

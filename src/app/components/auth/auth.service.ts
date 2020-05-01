@@ -1,11 +1,12 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AuthData } from "./auth-data.model";
 import { Subject } from "rxjs";
 import { Router } from "@angular/router";
 import { environment } from "../../../environments/environment";
 
 const BACKEND_URL = "http://localhost:3000/api" + "/users/";
+const BACKEND = "http://localhost:3000/api";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -38,7 +39,7 @@ export class AuthService {
       () => {
         this.router.navigate(["/"]);
       },
-      error => {
+      (error) => {
         this.authStatusListener.next(false);
       }
     );
@@ -51,7 +52,7 @@ export class AuthService {
         body
       )
       .subscribe(
-        response => {
+        (response) => {
           const token = response.token;
           this.token = token;
           if (token) {
@@ -68,19 +69,24 @@ export class AuthService {
             this.router.navigate(["/"]);
           }
         },
-        error => {
+        (error) => {
           this.authStatusListener.next(false);
         }
       );
   }
 
-  googleAuthUser() {
+  googleAuthUser(tokenParam) {
+    this.token = tokenParam;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: `bearer ${tokenParam}`,
+      }),
+    };
     this.http
-      .get<{ token: string; expiresIn: number; userId: string }>(
-        "http://localhost:3000/api" + "/auth/google"
-      )
+      .get<{ token: string; expiresIn: number; userId: string }>(BACKEND + "/auth/authenticate", httpOptions)
       .subscribe(
-        response => {
+        (response) => {
           const token = response.token;
           this.token = token;
           if (token) {
@@ -97,7 +103,7 @@ export class AuthService {
             this.router.navigate(["/"]);
           }
         },
-        error => {
+        (error) => {
           this.authStatusListener.next(false);
         }
       );
@@ -157,7 +163,7 @@ export class AuthService {
     return {
       token,
       expirationDate: new Date(expirationDate),
-      userId
+      userId,
     };
   }
 }

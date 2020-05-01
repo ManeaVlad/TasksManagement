@@ -2,6 +2,7 @@ ul {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
 }
 
 .menuButton {
@@ -21,23 +22,12 @@ ul {
 .hidden {
   display: none;
 }
-/*
-SAU
-@media (min-width: 768px) {
-  .sidenav {
-    display: none;
-  }
-} */
-
-ul {
-  display: flex;
-}
 
 .spacer {
   flex: 1 1 auto;
 }
 
-.menuButton img{
+.menuButton img {
   width: auto;
   height: auto;
   max-height: 200px;
@@ -48,5 +38,22 @@ ul {
 }
 
 .menuButton img:hover {
+  filter: brightness(1.4);
+}
+
+.sidenav-img {
+  width: auto;
+  height: auto;
+  max-height: 150px;
+  max-width: 100px;
+  padding: 0;
+  margin-left: 40px;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 0;
+  filter: brightness(1.2);
+}
+
+img:hover {
   filter: brightness(1.4);
 }

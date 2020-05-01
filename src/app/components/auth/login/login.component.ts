@@ -30,10 +30,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.login(form.value);
   }
 
-  googleAuth() {
-    this.authService.googleAuthUser();
-  }
-
   ngOnDestroy() {
     this.authStatusSub.unsubscribe();
   }
