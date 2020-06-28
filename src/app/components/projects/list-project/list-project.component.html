@@ -1,0 +1,100 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-card class="mat-elevation-z8">
+  <mat-card-title>
+    <h1 class="mat-headline">Projects Table</h1>
+  </mat-card-title>
+  <div class="search">
+    <a mat-icon-button color="primary" [routerLink]="['/create-project']"
+      ><mat-icon>add</mat-icon></a
+    >
+    <mat-form-field class="search-form" floatLabel="never">
+      <mat-label><mat-icon matP>search</mat-icon></mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchKey"
+        autocomplete="off"
+        (keyup)="applyFilter()"
+      />
+      <button
+        mat-button
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        *ngIf="searchKey"
+        (click)="onSearchClear()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <mat-table [dataSource]="project" matSort>
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Title
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj">
+        <a mat-icon-button [routerLink]="['/show-project', proj.id]">{{
+          proj.title
+        }}</a>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="creator">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Creator
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.creator }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="state">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        State
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.state }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="assignee">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Assignee
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.assignee }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="priority">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Priority
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.priority }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="startDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Start Date
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.startDate }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="dueDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Due Date
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.dueDate }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let proj">
+        <a
+          mat-icon-button
+          color="primary"
+          [routerLink]="['/edit-project', proj.id]"
+          ><mat-icon>launch</mat-icon></a
+        >
+        <button mat-icon-button color="warn" (click)="onDelete(proj.id)">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+  <mat-paginator
+    [length]="totalProjects"
+    [pageSize]="projectsPerPage"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="onChangedPage($event)"
+  ></mat-paginator>
+</mat-card>

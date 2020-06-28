@@ -1,19 +1,43 @@
 import { Component, OnInit } from "@angular/core";
 import { Chart } from "chart.js";
+import { Subscription } from "rxjs";
+import { Task } from "../../tasks/tasks.model";
+import { TaskService } from "../..//tasks/tasks.service";
 
 @Component({
   selector: "app-dashboard-line-graph",
   templateUrl: "./dashboard-line-graph.component.html",
-  styleUrls: ["./dashboard-line-graph.component.scss"]
+  styleUrls: ["./dashboard-line-graph.component.scss"],
 })
 export class LineGraphComponent implements OnInit {
-  constructor() {}
+  totalTasks = [];
+  tasksPerPage = 1000;
+  currentPage = 1;
+  private taskSub: Subscription;
+
+  constructor(public taskService: TaskService) {}
 
   ngOnInit() {
+    this.taskService.getTasks(this.tasksPerPage, this.currentPage);
+    this.taskSub = this.taskService
+      .getTaskUpdateListener()
+      .subscribe((taskData: { task: Task[]; taskCount: number }) => {
+        this.totalTasks = this.numberTasks(taskData.task);
+      });
     setTimeout(() => {
       this.createLineChart();
     }, 500);
   }
+
+  numberTasks(taskData: Task[]) {
+    let numberTask = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let i;
+    for (i = 0; i < taskData.length; i++) {
+      numberTask[new Date(taskData[i].startDate).getMonth()]++;
+    }
+    return numberTask;
+  }
+
   createLineChart() {
     new Chart("line-graph", {
       type: "line",
@@ -28,49 +52,40 @@ export class LineGraphComponent implements OnInit {
           "Jul",
           "Aug",
           "Sep",
-          "Oct"
+          "Oct",
+          "Nov",
+          "Dec",
         ],
         datasets: [
           {
             backgroundColor: "rgba(92, 107, 192, 0.36)",
             borderColor: "rgba(92, 107, 192,.5)",
-            data: [
-              76.97,
-              88.91,
-              99.31,
-              122.19,
-              130.85,
-              140.91,
-              150.36,
-              142.66,
-              150.36,
-              142.66
-            ],
-            label: "Dataset",
-            fill: "start"
-          }
-        ]
+            data: this.totalTasks,
+            label: "Tasks Assigned",
+            fill: "start",
+          },
+        ],
       },
       options: {
         elements: {
           line: {
-            tension: 0.000001
-          }
+            tension: 0.000001,
+          },
         },
         legend: {
-          display: false
+          display: false,
         },
         maintainAspectRatio: false,
         plugins: {
           filler: {
-            propagate: false
-          }
+            propagate: false,
+          },
         },
         title: {
           display: true,
-          text: "ASSIGNMENTS GRAPH"
-        }
-      }
+          text: "ASSIGNMENTS GRAPH",
+        },
+      },
     });
   }
 }

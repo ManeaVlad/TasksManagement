@@ -3,11 +3,11 @@ import { AngularMaterialModule } from "src/app/angular-material.module";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-import { UsersTableComponent } from "./users-table/users-table.component";
-import { UsersCreateComponent } from "./users-create/users-create.component";
+import { ListUsersComponent } from "./list-user/list-user.component";
+import { UsersCreateComponent } from "./users-create/edit-user.component";
 
 @NgModule({
-  declarations: [UsersTableComponent, UsersCreateComponent],
+  declarations: [ListUsersComponent, UsersCreateComponent],
   imports: [
     CommonModule,
     AngularMaterialModule,

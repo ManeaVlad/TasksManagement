@@ -1,0 +1,43 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title *ngIf="!isLoading"
+      >{{ project.title }}
+      <a
+        mat-icon-button
+        color="primary"
+        [routerLink]="['/edit-project', project.id]"
+        ><mat-icon>launch</mat-icon></a
+      >
+      <button mat-icon-button color="warn" (click)="onDelete(project.id)">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    </mat-card-title>
+    <mat-card-subtitle *ngIf="!isLoading">
+      <p class="mat-body-2">Project state: {{ project.state }}</p>
+      <p class="mat-body-2">
+        Project priority: {{ project.priority }}
+      </p></mat-card-subtitle
+    >
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <mat-card-content *ngIf="!isLoading">
+    <p class="mat-body-2 sub-titles">
+      Summary:
+    </p>
+    <p class="mat-body-2">
+      {{ project.description }}
+    </p>
+    <mat-divider></mat-divider>
+    <p class="mat-body-2 sub-titles">Assignee: {{ project.assignee }}</p>
+    <p class="mat-body-2 sub-titles">Creator: {{ project.creator }}</p>
+    <mat-divider></mat-divider>
+    <p class="mat-body-2 sub-titles">Start Date: {{ project.startDate }}</p>
+    <p class="mat-body-2 sub-titles">Due Date: {{ project.dueDate }}</p>
+    <mat-divider></mat-divider>
+    <p class="mat-body-2 sub-titles">Images atached:</p>
+    <div class="image-preview">
+      <img [src]="project.imagePath" [alt]="project.title" />
+    </div>
+  </mat-card-content>
+</mat-card>

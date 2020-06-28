@@ -1,232 +1,182 @@
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Subscription } from "rxjs";
+import { Task } from "../tasks.model";
+import { TaskService } from "../tasks.service";
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ElementRef,
-  ViewChild
-} from "@angular/core";
-import { MatDialog, MatPaginator, MatSort } from "@angular/material";
-import { CreateTaskComponent } from "../create-task/create-task.component";
-import { BehaviorSubject, fromEvent, merge, Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { HttpClient } from "@angular/common/http";
-import { Post } from "../../posts/post.model";
+  PageEvent,
+  MatSort,
+  MatTableDataSource,
+  MatPaginator,
+} from "@angular/material";
+import { AuthService } from "../../auth/auth.service";
 
 @Component({
-  selector: "app-list-task",
+  selector: "app-list-tasks",
   templateUrl: "./list-task.component.html",
-  styleUrls: ["./list-task.component.scss"]
+  styleUrls: ["./list-task.component.scss"],
 })
 export class ListTaskComponent implements OnInit, OnDestroy {
-  displayedColumns = [
-    "id",
-    "title"
-    // "state",
-    // "url",
-    // "created_at",
-    // "updated_at",
-    // "actions"
+  task: MatTableDataSource<any>;
+  isLoading = false;
+  totalTasks = 0;
+  tasksPerPage = 2;
+  currentPage = 1;
+  pageSizeOptions = [5, 10, 25, 100];
+  userIsAuthenticated = false;
+  searchKey: string;
+  userId: string;
+  filterSelectObj = [];
+  filterValues = {};
+  private taskSub: Subscription;
+  private authStatusSub: Subscription;
+  displayedColumns: string[] = [
+    "title",
+    "creator",
+    "state",
+    "priority",
+    "assignee",
+    "issueType",
+    "project",
+    "startDate",
+    "dueDate",
+    "actions",
   ];
-  exampleDatabase: String | null;
-  dataSource: ExampleDataSource | null;
-  index: number;
-  id: number;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
-    public httpClient: HttpClient,
-    public dialog: MatDialog,
-  ) {}
-
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild("filter", { static: true }) filter: ElementRef;
+    public taskService: TaskService,
+    private authService: AuthService
+  ) {
+    this.filterSelectObj = [
+      {
+        name: "Projects",
+        columnProp: "project",
+        options: [],
+      },
+    ];
+  }
 
   ngOnInit() {
+    this.isLoading = true;
+    this.taskService.getTasks(this.tasksPerPage, this.currentPage);
+    this.userId = this.authService.getUserId();
+    this.taskSub = this.taskService
+      .getTaskUpdateListener()
+      .subscribe((taskData: { task: Task[]; taskCount: number }) => {
+        this.isLoading = false;
+        this.totalTasks = taskData.taskCount;
+        this.task = new MatTableDataSource(taskData.task);
+        this.task.sort = this.sort;
+        this.task.paginator = this.paginator;
+        this.filterSelectObj.filter((o) => {
+          o.options = this.getFilterObject(this.task.data, o.columnProp);
+        });
+        this.task.filterPredicate = this.createFilter();
+      });
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authStatusSub = this.authService
+      .getAuthStatusListener()
+      .subscribe((isAuthenticated) => {
+        this.userIsAuthenticated = isAuthenticated;
+        this.userId = this.authService.getUserId();
+      });
   }
 
-  ngOnDestroy() {}
-
-  refresh() {
+  onChangedPage(pageData: PageEvent) {
+    this.isLoading = true;
+    this.currentPage = pageData.pageIndex + 1;
+    this.tasksPerPage = pageData.pageSize;
+    this.taskService.getTasks(this.tasksPerPage, this.currentPage);
   }
 
-  addNewTask(task: Post) {
-    const dialogRef = this.dialog.open(CreateTaskComponent, {
-      data: { task }
+  onDelete(taskId: string) {
+    this.isLoading = true;
+    this.taskService.deleteTask(taskId).subscribe(
+      () => {
+        this.taskService.getTasks(this.tasksPerPage, this.currentPage);
+      },
+      () => {
+        this.isLoading = false;
+      }
+    );
+  }
+
+  applyFilter() {
+    this.task.filter = this.searchKey.trim().toLowerCase();
+  }
+
+  onSearchClear() {
+    this.searchKey = "";
+    this.applyFilter();
+  }
+
+  filterChange(filter, event) {
+    this.filterValues[
+      filter.columnProp
+    ] = event.target.value.trim().toLowerCase();
+    this.task.filter = JSON.stringify(this.filterValues);
+  }
+
+  getFilterObject(fullObj, key) {
+    const uniqChk = [];
+    fullObj.filter((obj) => {
+      if (!uniqChk.includes(obj[key])) {
+        uniqChk.push(obj[key]);
+      }
+      return obj;
     });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result === 1) {
-    //     this.exampleDatabase.dataChange.value.push(
-    //       this.dataService.getDialogData()
-    //     );
-    //     this.refreshTable();
-    //   }
-    // });
+    return uniqChk;
   }
 
-  // startEdit(
-  //   i: number,
-  //   id: number,
-  //   title: string,
-  //   state: string,
-  //   url: string,
-  //   created_at: string,
-  //   updated_at: string
-  // ) {
-  //   this.id = id;
-  //   this.index = i;
-  //   console.log(this.index);
-  //   const dialogRef = this.dialog.open(EditDialogComponent, {
-  //     data: {
-  //       id: id,
-  //       title: title,
-  //       state: state,
-  //       url: url,
-  //       created_at: created_at,
-  //       updated_at: updated_at
-  //     }
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result === 1) {
-  //       const foundIndex = this.exampleDatabase.dataChange.value.findIndex(
-  //         x => x.id === this.id
-  //       );
-  //       this.exampleDatabase.dataChange.value[
-  //         foundIndex
-  //       ] = this.dataService.getDialogData();
-  //       this.refreshTable();
-  //     }
-  //   });
-  // }
-
-  // deleteItem(i: number, id: number, title: string, state: string, url: string) {
-  //   this.index = i;
-  //   this.id = id;
-  //   const dialogRef = this.dialog.open(DeleteDialogComponent, {
-  //     data: { id: id, title: title, state: state, url: url }
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result === 1) {
-  //       const foundIndex = this.exampleDatabase.dataChange.value.findIndex(
-  //         x => x.id === this.id
-  //       );
-  //       this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
-  //       this.refreshTable();
-  //     }
-  //   });
-  // }
-
-  private refreshTable() {
-    this.paginator._changePageSize(this.paginator.pageSize);
+  createFilter() {
+    const filterFunction = function (data: any, filter: string): boolean {
+      const searchTerms = JSON.parse(filter);
+      let isFilterSet = false;
+      for (const col in searchTerms) {
+        if (searchTerms[col].toString() !== "") {
+          isFilterSet = true;
+        } else {
+          delete searchTerms[col];
+        }
+      }
+      const nameSearch = () => {
+        let found = false;
+        if (isFilterSet) {
+          for (const col in searchTerms) {
+            searchTerms[col]
+              .trim()
+              .toLowerCase()
+              .split(" ")
+              .forEach((word) => {
+                if (
+                  data[col].toString().toLowerCase().indexOf(word) != -1 &&
+                  isFilterSet
+                ) {
+                  found = true;
+                }
+              });
+          }
+          return found;
+        } else {
+          return true;
+        }
+      };
+      return nameSearch();
+    };
+    return filterFunction;
   }
 
-  // public loadData() {
-  //   this.dataSource = new ExampleDataSource(
-  //     // this.exampleDatabase,
-  //     // this.paginator,
-  //     // this.sort
-  //   );
-  //   fromEvent(this.filter.nativeElement, "keyup").subscribe(() => {
-  //     if (!this.dataSource) {
-  //       return;
-  //     }
-  //     this.dataSource.filter = this.filter.nativeElement.value;
-  //   });
-  // }
-}
-
-export class ExampleDataSource  {
-  _filterChange = new BehaviorSubject("");
-
-  get filter(): string {
-    return this._filterChange.value;
+  resetFilters() {
+    this.filterValues = {};
+    this.filterSelectObj.forEach((value, key) => {
+      value.modelValue = undefined;
+    });
+    this.task.filter = "";
   }
 
-  set filter(filter: string) {
-    this._filterChange.next(filter);
+  ngOnDestroy() {
+    this.taskSub.unsubscribe();
+    this.authStatusSub.unsubscribe();
   }
-
-  filteredData: Post[] = [];
-  renderedData: Post[] = [];
-
-  constructor(
-    public _paginator: MatPaginator,
-    public _sort: MatSort
-  ) {
-    this._filterChange.subscribe(() => (this._paginator.pageIndex = 0));
-  }
-
-  // connect(): Observable<Post[]> {
-  //   const displayDataChanges = [
-  //     this._sort.sortChange,
-  //     this._filterChange,
-  //     this._paginator.page
-  //   ];
-
-  //   return merge(...displayDataChanges).pipe(
-  //     // map(() => {
-  //     //   this.filteredData = this._exampleDatabase.data
-  //     //     .slice()
-  //     //     .filter((issue: Post) => {
-  //     //       const searchStr = (
-  //     //         issue.id +
-  //     //         issue.title
-  //     //        // issue.url +
-  //     //        // issue.created_at
-  //     //       ).toLowerCase();
-  //     //       return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
-  //     //     });
-  //       const sortedData = this.sortData(this.filteredData.slice());
-  //       const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-  //       this.renderedData = sortedData.splice(
-  //         startIndex,
-  //         this._paginator.pageSize
-  //       );
-  //       return this.renderedData;
-  //     })
-  //   );
-  // }
-
-  // disconnect() {}
-
-  // sortData(data: Post[]): Post[] {
-  //   if (!this._sort.active || this._sort.direction === "") {
-  //     return data;
-  //   }
-
-  //   return data.sort((a, b) => {
-  //     let propertyA: number | string = "";
-  //     let propertyB: number | string = "";
-
-  //     switch (this._sort.active) {
-  //       case "id":
-  //         [propertyA, propertyB] = [a.id, b.id];
-  //         break;
-  //       case "title":
-  //         [propertyA, propertyB] = [a.title, b.title];
-  //         break;
-  //       // case "state":
-  //       //   [propertyA, propertyB] = [a.state, b.state];
-  //       //   break;
-  //       // case "url":
-  //       //   [propertyA, propertyB] = [a.url, b.url];
-  //       //   break;
-  //       // case "created_at":
-  //       //   [propertyA, propertyB] = [a.created_at, b.created_at];
-  //       //   break;
-  //       // case "updated_at":
-  //       //   [propertyA, propertyB] = [a.updated_at, b.updated_at];
-  //       //   break;
-  //     }
-
-  //     const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-  //     const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
-
-  //     return (
-  //       (valueA < valueB ? -1 : 1) * (this._sort.direction === "asc" ? 1 : -1)
-  //     );
-  //   });
-  // }
 }

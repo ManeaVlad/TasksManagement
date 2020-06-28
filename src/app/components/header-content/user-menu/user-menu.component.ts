@@ -5,7 +5,7 @@ import { AuthService } from "../../auth/auth.service";
 @Component({
   selector: "app-user-menu",
   templateUrl: "./user-menu.component.html",
-  styleUrls: ["./user-menu.component.scss"]
+  styleUrls: ["./user-menu.component.scss"],
 })
 export class UserMenuComponent implements OnInit, OnDestroy {
   isOpen = false;
@@ -15,6 +15,15 @@ export class UserMenuComponent implements OnInit, OnDestroy {
     private authService: AuthService
   ) {}
   ngOnInit() {}
+
+  openSnackBar() {
+    this.headerService.getCompanyId().subscribe(
+      (content) => {
+        alert("Company ID: " + content.company);
+      },
+      (error) => {}
+    );
+  }
 
   onLogout() {
     this.authService.logout();

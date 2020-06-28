@@ -1,18 +1,55 @@
 import { Component, OnInit } from "@angular/core";
 import { Chart } from "chart.js";
+import { Subscription } from "rxjs";
+import { Task } from "../../tasks/tasks.model";
+import { TaskService } from "../..//tasks/tasks.service";
 
 @Component({
   selector: "app-dashboard-bar-graph",
   templateUrl: "./dashboard-bar-graph.component.html",
-  styleUrls: ["./dashboard-bar-graph.component.scss"]
+  styleUrls: ["./dashboard-bar-graph.component.scss"],
 })
 export class BarGraphComponent implements OnInit {
-  constructor() {}
+  totalTasksBug = [];
+  totalTasksRegression = [];
+  totalTasksDevOps = [];
+  totalTasksStory = [];
+  tasksPerPage = 1000;
+  currentPage = 1;
+  private taskSub: Subscription;
+
+  constructor(public taskService: TaskService) {}
 
   ngOnInit() {
+    this.taskService.getTasks(this.tasksPerPage, this.currentPage);
+    this.taskSub = this.taskService
+      .getTaskUpdateListener()
+      .subscribe((taskData: { task: Task[]; taskCount: number }) => {
+        this.totalTasksBug = this.numberTasksByStates(taskData.task, "Bug");
+        this.totalTasksRegression = this.numberTasksByStates(
+          taskData.task,
+          "Regression"
+        );
+        this.totalTasksDevOps = this.numberTasksByStates(
+          taskData.task,
+          "DevOps"
+        );
+        this.totalTasksStory = this.numberTasksByStates(taskData.task, "Story");
+      });
     setTimeout(() => {
       this.createBarGraph();
     }, 500);
+  }
+
+  numberTasksByStates(taskData: Task[], state: string) {
+    let numberTask = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let i;
+    for (i = 0; i < taskData.length; i++) {
+      if (taskData[i].issueType === state) {
+        numberTask[new Date(taskData[i].startDate).getMonth()]++;
+      }
+    }
+    return numberTask;
   }
 
   createBarGraph() {
@@ -31,59 +68,59 @@ export class BarGraphComponent implements OnInit {
           "Sep",
           "Oct",
           "Nov",
-          "Dec"
+          "Dec",
         ],
         datasets: [
           {
             backgroundColor: "rgba(92, 107, 192, .7)",
             borderColor: "rgba(92, 107, 192, .7)",
-            data: [70, 88, 77, 93, 82, 100, 70, 67, 78, 99],
-            label: "QA",
-            fill: "false"
+            data: this.totalTasksBug,
+            label: "Bug",
+            fill: "false",
           },
           {
             backgroundColor: "rgba(66, 165, 245, .7)",
             borderColor: "rgba(69, 39, 160, .7)",
-            data: [80, 88, 67, 95, 76, 60, 67, 95, 95, 66],
-            label: "Developer",
-            fill: "false"
+            data: this.totalTasksRegression,
+            label: "Regression",
+            fill: "false",
           },
           {
             backgroundColor: "rgba(38, 166, 154, .7)",
             borderColor: "rgba(69, 39, 160, .7)",
-            data: [60, 88, 70, 67, 27, 83, 78, 88, 95, 60],
+            data: this.totalTasksDevOps,
             label: "DevOps",
-            fill: "false"
+            fill: "false",
           },
           {
             backgroundColor: "rgba(102, 187, 106, .7)",
             borderColor: "rgba(255, 99, 132)",
-            data: [75, 55, 55, 95, 66, 88, 70, 78, 77, 100],
-            label: "Support",
-            fill: "false"
-          }
-        ]
+            data: this.totalTasksStory,
+            label: "Story",
+            fill: "false",
+          },
+        ],
       },
       options: {
         legend: {
-          display: false
+          display: false,
         },
         elements: {
           line: {
-            tension: 0.000001
-          }
+            tension: 0.000001,
+          },
         },
         maintainAspectRatio: false,
         plugins: {
           filler: {
-            propagate: false
-          }
+            propagate: false,
+          },
         },
         title: {
           display: true,
-          text: "TASKS CREATED"
-        }
-      }
+          text: "TASKS CREATED",
+        },
+      },
     });
   }
 }

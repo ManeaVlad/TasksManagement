@@ -25,18 +25,25 @@
       >
       <a
         mat-list-item
+        routerLink="/create-project"
+        routerLinkActive="mat-accent"
+        *ngIf="userIsAuthenticated"
+        >Create Project</a
+      >
+      <a
+        mat-list-item
         routerLink="/create-task"
         routerLinkActive="mat-accent"
         *ngIf="userIsAuthenticated"
         >Create Task</a
       >
-      <!-- <a
-      mat-list-item
-      routerLink="/"
-      routerLinkActive="mat-accent"
-      *ngIf="userIsAuthenticated"
-      >Projects</a
-    > -->
+      <a
+        mat-list-item
+        routerLink="/list-projects"
+        routerLinkActive="mat-accent"
+        *ngIf="userIsAuthenticated"
+        >Projects</a
+      >
       <a
         mat-list-item
         routerLink="/list-task"
@@ -66,8 +73,8 @@
         >Sign Up</a
       >
       <img
-      fxLayout="center"
-      fxLayoutAlign="center center"
+        fxLayout="center"
+        fxLayoutAlign="center center"
         mat-list-item
         class="sidenav-img"
         src="http://localhost:3000/images/VERTICAL-LOGO-NO-JIRA.png"
@@ -92,7 +99,6 @@
               src="http://localhost:3000/images/HORIZONTAL-LOGO-NO-JIRA.png"
               alt="Horizontal Logo"
             />
-            <!-- have to add in DB -->
           </a>
         </span>
       </ul>
@@ -115,11 +121,11 @@
         </li>
       </ul>
       <app-notifications-header
-        [notifications]="headerHelpers?.notifications"
+        [notifications]="notification"
         *ngIf="userIsAuthenticated"
       ></app-notifications-header>
       <app-user-menu
-        [currentUser]="headerHelpers?.currentUser"
+        [currentUser]="{ currentUserName: userName }"
         *ngIf="userIsAuthenticated"
       ></app-user-menu>
     </mat-toolbar>

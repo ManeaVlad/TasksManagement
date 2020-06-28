@@ -1,0 +1,78 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Edit user</mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form [formGroup]="form" (submit)="onSaveUser()" *ngIf="!isLoading">
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        formControlName="userName"
+        placeholder="Username"
+      />
+      <mat-error *ngIf="form.get('userName').invalid"
+        >Enter a Username.</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        placeholder="Email"
+      />
+      <mat-error *ngIf="form.get('email').invalid">Enter a email.</mat-error>
+    </mat-form-field>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px">
+      <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
+        <mat-form-field>
+          <input
+            matInput
+            type="tel"
+            formControlName="phone"
+            placeholder="Phone Number"
+          />
+          <mat-error *ngIf="form.get('phone').invalid"
+            >Enter a phone number.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            formControlName="role"
+            placeholder="Role"
+          />
+          <mat-error *ngIf="form.get('role').invalid">Enter a role.</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px">
+    <mat-form-field>
+      <mat-label>Admin</mat-label>
+      <mat-select placeholder="Admin" matInput formControlName="isAdmin">
+        <mat-option *ngFor="let value of values" [value]="value.value">
+          {{ value.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Active User</mat-label>
+      <mat-select
+        placeholder="Active User"
+        matInput
+        formControlName="activeUser"
+      >
+        <mat-option *ngFor="let value of values" [value]="value.value">
+          {{ value.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+    <button mat-raised-button color="primary" type="submit">Save User</button>
+  </form>
+</mat-card>

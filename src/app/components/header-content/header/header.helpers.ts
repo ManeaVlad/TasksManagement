@@ -19,7 +19,4 @@ export const HeaderHelpers = {
       state: 'state'
     }
   ],
-  currentUser: {
-    currentUserName: "Vlad Manea"
-  }
 };

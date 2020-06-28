@@ -137,7 +137,6 @@ export class SignupComponent extends FormComponent
       return;
     } else {
       this.isLoading = true;
-      console.log(this.form.value);
       this.authService.createUser(this.form.value);
     }
   }

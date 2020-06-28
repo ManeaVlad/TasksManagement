@@ -9,14 +9,14 @@ import { AuthInterceptor } from "./components/auth/auth-interceptor";
 import { ErrorInterceptor } from "./error-interceptor";
 import { ErrorComponent } from "./components/error/error.component";
 import { AngularMaterialModule } from "./angular-material.module";
-import { PostsModule } from "./components/posts/posts.module";
 import { HeaderModule } from "./components/header-content/header-content.module";
 import { TasksModule } from "./components/tasks/tasks.module";
 import { ServicesModule } from "./components/services-page/services.module";
-import { DashboardModule } from "./components/dashboard/dasboard.module";
+import { DashboardModule } from "./components/dashboard/dashboard.module";
 import { FooterModule } from "./components/footer/footer.module";
 import { AuthModule } from "./components/auth/auth.module";
 import { UsersModule } from "./components/users/users.module";
+import { ProjectsModule } from "./components/projects/project.module";
 
 @NgModule({
   declarations: [AppComponent, ErrorComponent],
@@ -26,7 +26,6 @@ import { UsersModule } from "./components/users/users.module";
     BrowserAnimationsModule,
     HttpClientModule,
     AngularMaterialModule,
-    PostsModule,
     HeaderModule,
     TasksModule,
     ServicesModule,
@@ -34,6 +33,7 @@ import { UsersModule } from "./components/users/users.module";
     FooterModule,
     UsersModule,
     AuthModule,
+    ProjectsModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

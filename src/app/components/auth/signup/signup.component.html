@@ -108,29 +108,6 @@
             }}</mat-error>
           </mat-form-field>
         </div>
-        <button
-          mat-button
-          color="primary"
-          type="button"
-          *ngIf="!isLoading"
-          class="btn-inner"
-          (click)="showCompanyInput = !showCompanyInput"
-        >
-          Add Company/Team
-        </button>
-        <mat-form-field *ngIf="showCompanyInput === true">
-          <input
-            type="text"
-            matInput
-            name="companyName"
-            spellcheck="false"
-            ngModel
-            placeholder="Company/Team Name"
-            formControlName="companyName"
-          />
-          <mat-hint class="font-style">Company Name can not be changed.</mat-hint>
-          <mat-error>{{ formErrors["companyName"] }}</mat-error>
-        </mat-form-field>
         <p class="font-size font-style">
           By clicking Sign Up, you are indicating that you have read and
           acknowledge the

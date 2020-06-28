@@ -4,83 +4,149 @@
     <mat-card-title>Create task</mat-card-title>
   </mat-card-header>
   <mat-divider></mat-divider>
-  <form [formGroup]="form" *ngIf="!isLoading" class="form-container">
-    <div fxLayout="column" fxLayoutGap="30px">
-      <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px">
-        <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
-          <mat-form-field>
-            <mat-label>Project</mat-label>
-            <mat-select placeholder="Choose project" required>
-              <mat-option *ngFor="let project of projects" [value]="project">
-                {{ project.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
-          <mat-form-field>
-            <mat-label>Assignee</mat-label>
-            <mat-select placeholder="Choose assignee" required>
-              <mat-option value="-- None --">-- None --</mat-option>
-              <mat-optgroup
-                *ngFor="let group of groupAsignee"
-                [label]="group.name"
-                [disabled]="group.disabled"
-              >
-                <mat-option
-                  *ngFor="let asignee of group.users"
-                  [value]="asignee"
-                >
-                  {{ asignee.name }}
-                </mat-option>
-              </mat-optgroup>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px" fxLayout>
-        <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
-          <mat-form-field>
-            <mat-label>Issue Type</mat-label>
-            <mat-select required>
-              <mat-option *ngFor="let issue of projects" [value]="issue">
-                {{ issue.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
-          <mat-form-field>
-            <mat-label>Priority</mat-label>
-            <mat-select placeholder="Choose priority" required>
-              <mat-option *ngFor="let priority of projects" [value]="priority">
-                {{ priority.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <!-- <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px" fxLayout>
+  <form
+    [formGroup]="form"
+    (submit)="onSaveTask()"
+    *ngIf="!isLoading"
+    class="form-container"
+  >
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        formControlName="title"
+        placeholder="Task title"
+      />
+      <mat-error *ngIf="form.get('title').invalid"
+        >Enter a task title.</mat-error
+      >
+    </mat-form-field>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px">
+      <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
         <mat-form-field>
-          <mat-label>Due Date</mat-label>
+          <mat-label>Project</mat-label>
+          <mat-select matInput formControlName="project">
+            <mat-option
+              *ngFor="let project of projects"
+              [value]="project.title"
+            >
+              {{ project.title }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
-      <mat-form-field>
-        <input matInput type="text" formControlName="title" placeholder="Title" />
-        <mat-error *ngIf="form.get('title').invalid">Enter title</mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <textarea
-          matInput
-          rows="4"
-          formControlName="content"
-          placeholder="Content"
-        >
-        </textarea>
-        <mat-error *ngIf="form.get('content').invalid">Enter content</mat-error>
-      </mat-form-field> -->
+      <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="Assignee"
+            aria-label="Assignee"
+            formControlName="assignee"
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option
+              *ngFor="let assignee of filteredAssignees | async"
+              [value]="assignee.userName"
+            >
+              <span>{{ assignee.userName }}</span>
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="form.get('assignee').invalid"
+            >Enter a valid assignee.</mat-error
+          >
+        </mat-form-field>
+      </div>
     </div>
-
-    <button mat-raised-button color="primary" type="submit">Create</button>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px" fxLayout>
+      <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
+        <mat-form-field>
+          <mat-label>Issue Type</mat-label>
+          <mat-select matInput formControlName="issueType">
+            <mat-option *ngFor="let issue of issueTypes" [value]="issue.name">
+              {{ issue.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
+        <mat-form-field>
+          <mat-label>Priority</mat-label>
+          <mat-select
+            placeholder="Priority"
+            matInput
+            formControlName="priority"
+          >
+            <mat-option
+              *ngFor="let priority of priorities"
+              [value]="priority.name"
+            >
+              {{ priority.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px" fxLayout>
+      <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
+        <mat-form-field>
+          <mat-label>Due Date</mat-label>
+          <input matInput [matDatepicker]="picker1" formControlName="dueDate" />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker1"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
+        <mat-form-field>
+          <mat-label>Start Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker2"
+            formControlName="startDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker2"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-form-field>
+      <mat-label>Task state</mat-label>
+      <mat-select matInput formControlName="state">
+        <mat-option *ngFor="let issue of states" [value]="issue.name">
+          {{ issue.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div>
+      <button mat-stroked-button type="button" (click)="filePicker.click()">
+        Pick Image
+      </button>
+      <input type="file" #filePicker (change)="onImagePicked($event)" />
+    </div>
+    <div
+      class="image-preview"
+      *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid"
+    >
+      <img [src]="imagePreview" [alt]="form.value.title" />
+    </div>
+    <mat-form-field>
+      <textarea
+        matInput
+        rows="4"
+        formControlName="description"
+        placeholder="Summary"
+      >
+      </textarea>
+      <mat-error *ngIf="form.get('description').invalid"
+        >Enter a project description.</mat-error
+      >
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Save Task</button>
   </form>
 </mat-card>

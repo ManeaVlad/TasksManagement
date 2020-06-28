@@ -1,71 +1,137 @@
-<!--<div class="form">
-  <mat-form-field floatPlaceholder="never" color="accent">
-    <input matInput #filter placeholder="Filter issues">
-  </mat-form-field>
-</div>
-
-<mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
-  <ng-container matColumnDef="id">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-    <mat-cell *matCellDef="let row" >{{row.id}}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="title">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>
-    <mat-cell *matCellDef="let row"> {{row.title}}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="state">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>State</mat-header-cell>
-    <mat-cell *matCellDef="let row"> {{row.state}}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="url">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Url</mat-header-cell>
-    <mat-cell *matCellDef="let row"> {{row.url}}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="created_at">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Created at</mat-header-cell>
-    <mat-cell *matCellDef="let row"> {{row.created_at}}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="updated_at">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Updated at</mat-header-cell>
-    <mat-cell *matCellDef="let row"> {{row.updated_at}}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="actions">
-    <mat-header-cell *matHeaderCellDef>
-      <button mat-icon-button color="primary" (click)="addNewTask()">
-        <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-card class="mat-elevation-z8">
+  <mat-card-title>
+    <h1 class="mat-headline">Tasks Table</h1>
+  </mat-card-title>
+  <div class="search">
+    <a mat-icon-button color="primary" [routerLink]="['/create-task']"
+      ><mat-icon>add</mat-icon></a
+    >
+    <mat-form-field class="search-form" floatLabel="never">
+      <mat-label><mat-icon matP>search</mat-icon></mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchKey"
+        autocomplete="off"
+        (keyup)="applyFilter()"
+      />
+      <button
+        mat-button
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        *ngIf="searchKey"
+        (click)="onSearchClear()"
+      >
+        <mat-icon>close</mat-icon>
       </button>
-    </mat-header-cell>
-
-     <mat-cell *matCellDef="let row; let i=index;">
-      <button mat-icon-button color="accent" (click)="startEdit(i, row.id, row.title, row.state, row.url, row.created_at, row.updated_at)">
-        <mat-icon aria-label="Edit">edit</mat-icon>
-      </button>
-
-       <button mat-icon-button color="accent" (click)="deleteItem(i, row.id, row.title, row.state, row.url)">
-        <mat-icon aria-label="Delete">delete</mat-icon>
-      </button>
-    </mat-cell>
-  </ng-container>
-
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
-
-
-<div class="no-results" [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'">
-  No results
-</div>
-
-<mat-paginator #paginator
-               [length]="dataSource.filteredData.length"
-               [pageIndex]="0"
-               [pageSize]="10"
-               [pageSizeOptions]="[5, 10, 25, 100]">
-</mat-paginator>-->
-
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field
+      *ngFor="let filter of filterSelectObj"
+      style="margin-left: 15px;"
+    >
+      <mat-label>Filter by Project</mat-label>
+      <select
+        matNativeControl
+        name="{{ filter.columnProp }}"
+        [(ngModel)]="filter.modelValue"
+        (change)="filterChange(filter, $event)"
+      >
+        <option value="">-- Select {{ filter.name }} --</option>
+        <option [value]="item" *ngFor="let item of filter.options">{{
+          item
+        }}</option>
+      </select>
+    </mat-form-field>
+    &nbsp;
+    <button mat-raised-button color="primary" (click)="resetFilters()">
+      Reset
+    </button>
+  </div>
+  <mat-table [dataSource]="task" matSort>
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Title
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj">
+        <a mat-icon-button [routerLink]="['/show-task', proj.id]">{{
+          proj.title
+        }}</a>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="creator">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Creator
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj">
+        {{ proj.creator }}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="state">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        State
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.state }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="assignee">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Assignee
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.assignee }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="priority">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Priority
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.priority }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="issueType">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Issue Type
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.issueType }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="project">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Project
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.project }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="startDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Start Date
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.startDate }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="dueDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Due Date
+      </mat-header-cell>
+      <mat-cell *matCellDef="let proj"> {{ proj.dueDate }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let proj">
+        <a
+          mat-icon-button
+          color="primary"
+          [routerLink]="['/edit-task', proj.id]"
+          ><mat-icon>launch</mat-icon></a
+        >
+        <button mat-icon-button color="warn" (click)="onDelete(proj.id)">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+  <mat-paginator
+    [length]="totalTasks"
+    [pageSize]="tasksPerPage"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="onChangedPage($event)"
+  ></mat-paginator>
+</mat-card>

@@ -1,0 +1,39 @@
+<div fxLayout="center" fxLayoutAlign="center center">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <mat-card fxLayout="column" fxLayoutAlign="center center">
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <form
+        (submit)="onSelection()"
+        [formGroup]="form"
+        *ngIf="!isLoading"
+        class="form-container"
+      >
+        <p class="center-text">Create a new team/company or join one by using a specific id.</p>
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="Company/Team Name"
+            aria-label="State"
+            formControlName="company"
+          />
+          <mat-hint class="font-style">Company Name can not be changed.</mat-hint>
+        </mat-form-field>
+        <button
+          mat-button
+          color="primary"
+          type="submit"
+          *ngIf="!isLoading"
+          class="btn-normal"
+        >
+          Continue
+        </button>
+        <div class="logo-image" fxLayout="column" fxLayoutAlign="center center">
+          <img
+            src="http://localhost:3000/images/VERTICAL-LOGO-NO-JIRA.png"
+            alt="Vertical Logo"
+          />
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</div>

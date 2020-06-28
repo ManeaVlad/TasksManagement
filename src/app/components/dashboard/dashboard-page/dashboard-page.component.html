@@ -1,12 +1,30 @@
 <div fxLayout="row" fxLayout="row wrap">
-  <div *ngFor="let dash of dashCard" fxFlex="25" fxFlex.lt-sm="100" fxFlex.sm="50" fxFlex.md="25">
-      <app-dashboard-card [dashData]="dash"></app-dashboard-card>
+  <div
+    *ngFor="let dash of dashCard"
+    fxFlex="25"
+    fxFlex.lt-sm="100"
+    fxFlex.sm="50"
+    fxFlex.md="25"
+  >
+    <app-dashboard-card [dashData]="dash"></app-dashboard-card>
   </div>
 </div>
 <div fxLayout="row" fxLayout="row wrap">
-  <app-dashboard-bar-graph fxFlex="50" fxFlex.lt-sm="100" fxFlex.sm="50"></app-dashboard-bar-graph>
-  <app-dashboard-doughnut-graph fxFlex="50" fxFlex.lt-sm="100" fxFlex.sm="50"></app-dashboard-doughnut-graph>
+  <app-dashboard-bar-graph
+    fxFlex="50"
+    fxFlex.lt-sm="100"
+    fxFlex.sm="50"
+  ></app-dashboard-bar-graph>
+  <app-dashboard-doughnut-graph
+    fxFlex="50"
+    fxFlex.lt-sm="100"
+    fxFlex.sm="50"
+  ></app-dashboard-doughnut-graph>
 </div>
 <div fxLayout="row" fxLayout="row wrap">
-  <app-dashboard-line-graph fxFlex="100" fxFlex.lt-sm="100" fxFlex.sm="100"></app-dashboard-line-graph>
+  <app-dashboard-line-graph
+    fxFlex="100"
+    fxFlex.lt-sm="100"
+    fxFlex.sm="100"
+  ></app-dashboard-line-graph>
 </div>

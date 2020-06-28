@@ -1,0 +1,43 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title *ngIf="!isLoading"
+      >{{ task.title }}
+      <a
+        mat-icon-button
+        color="primary"
+        [routerLink]="['/edit-project', task.id]"
+        ><mat-icon>launch</mat-icon></a
+      >
+      <button mat-icon-button color="warn" (click)="onDelete(task.id)">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+      Project: {{ task.project }}
+    </mat-card-title>
+    <mat-card-subtitle *ngIf="!isLoading">
+      <p class="mat-body-2">Task state: {{ task.state }}</p>
+      <p class="mat-body-2">Task priority: {{ task.priority }}</p>
+      <p class="mat-body-2">Issue Type: {{ task.issueType }}</p>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <mat-card-content *ngIf="!isLoading">
+    <p class="mat-body-2 sub-titles">
+      Summary:
+    </p>
+    <p class="mat-body-2">
+      {{ task.description }}
+    </p>
+    <mat-divider></mat-divider>
+    <p class="mat-body-2 sub-titles">Assignee: {{ task.assignee }}</p>
+    <p class="mat-body-2 sub-titles">Creator: {{ task.creator }}</p>
+    <mat-divider></mat-divider>
+    <p class="mat-body-2 sub-titles">Start Date: {{ task.startDate }}</p>
+    <p class="mat-body-2 sub-titles">Due Date: {{ task.dueDate }}</p>
+    <mat-divider></mat-divider>
+    <p class="mat-body-2 sub-titles">Images atached:</p>
+    <div class="image-preview">
+      <img [src]="task.imagePath" [alt]="task.title" />
+    </div>
+  </mat-card-content>
+</mat-card>

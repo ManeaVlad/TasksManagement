@@ -16,7 +16,11 @@ import {
   MatSortModule,
   MatTableModule,
   MatCheckboxModule,
+  MatAutocompleteModule,
+  MatNativeDateModule,
+  MatRadioModule,
 } from "@angular/material";
+import { MatDatepickerModule } from "@angular/material/datepicker";
 import { LayoutModule } from "@angular/cdk/layout";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import {
@@ -47,6 +51,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatSortModule,
     MatTableModule,
     MatCheckboxModule,
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule,
     LayoutModule,
     FlexLayoutModule,
     PerfectScrollbarModule,

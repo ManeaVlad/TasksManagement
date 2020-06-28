@@ -17,19 +17,13 @@
     <div class="content">
       <mat-nav-list>
         <mat-list-item>
-          <a matLine routerLink="/user/profile">Profile</a>
-          <button mat-icon-button>
-            <mat-icon>account_circle</mat-icon>
-          </button>
-        </mat-list-item>
-        <mat-list-item>
-          <a matLine>Settings</a>
-          <button mat-icon-button>
+          <a matLine>Company</a>
+          <button mat-icon-button  (click)="openSnackBar()">
             <mat-icon>settings</mat-icon>
           </button>
         </mat-list-item>
         <mat-list-item>
-          <a matLine>Help</a>
+          <a matLine href="https://en.wikipedia.org/wiki/Agile_software_development">Help</a>
           <button mat-icon-button>
             <mat-icon>help</mat-icon>
           </button>

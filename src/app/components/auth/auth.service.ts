@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AuthData } from "./auth-data.model";
+import { CompanyData } from "./company-data.model";
 import { Subject } from "rxjs";
 import { Router } from "@angular/router";
 import { environment } from "../../../environments/environment";
@@ -11,8 +12,12 @@ const BACKEND = "http://localhost:3000/api";
 @Injectable({ providedIn: "root" })
 export class AuthService {
   private isAuthenticated = false;
+  private isAdmin = false;
   private token: string;
+  private userName: string;
   private authStatusListener = new Subject<boolean>();
+  private adminStatusListener = new Subject<boolean>();
+  private userNameStatusListener = new Subject<string>();
   private tokenTimer: any;
   private userId: string;
 
@@ -26,8 +31,24 @@ export class AuthService {
     return this.isAuthenticated;
   }
 
+  getIsAdmin() {
+    return this.isAdmin;
+  }
+
+  getUser() {
+    return this.userName;
+  }
+
   getAuthStatusListener() {
     return this.authStatusListener.asObservable();
+  }
+
+  getAdminStatusListener() {
+    return this.authStatusListener.asObservable();
+  }
+
+  getUserNameStatusListener() {
+    return this.userNameStatusListener.asObservable();
   }
 
   getUserId() {
@@ -58,15 +79,49 @@ export class AuthService {
           if (token) {
             const expiresInDuration = response.expiresIn;
             this.setAuthTimer(expiresInDuration);
-            this.isAuthenticated = true;
+            this.getUserIsAdmin().subscribe(
+              (isAdminUser) => {
+                if (isAdminUser) {
+                  this.isAdmin = true;
+                  this.adminStatusListener.next(true);
+                }
+              },
+              (error) => {
+                this.adminStatusListener.next(false);
+              }
+            );
+            this.getUserName().subscribe(
+              (userValue) => {
+                if (userValue) {
+                  this.userName = String(userValue);
+                  this.userNameStatusListener.next(this.userName);
+                }
+              },
+              (error) => {
+                this.userName = "Unknown";
+                this.userNameStatusListener.next("Unknown");
+              }
+            );
+            this.getCompanyForUser().subscribe(
+              (company) => {
+                if (company) {
+                  this.isAuthenticated = true;
+                  this.authStatusListener.next(true);
+                  this.router.navigate(["/dashboard"]);
+                } else {
+                  this.router.navigate(["/auth/company-selection"]);
+                }
+              },
+              (error) => {
+                this.authStatusListener.next(false);
+              }
+            );
             this.userId = response.userId;
-            this.authStatusListener.next(true);
             const now = new Date();
             const expirationDate = new Date(
               now.getTime() + expiresInDuration * 1000
             );
             this.saveAuthData(token, expirationDate, this.userId);
-            this.router.navigate(["/"]);
           }
         },
         (error) => {
@@ -84,7 +139,10 @@ export class AuthService {
       }),
     };
     this.http
-      .get<{ token: string; expiresIn: number; userId: string }>(BACKEND + "/auth/authenticate", httpOptions)
+      .get<{ token: string; expiresIn: number; userId: string }>(
+        BACKEND + "/auth/authenticate",
+        httpOptions
+      )
       .subscribe(
         (response) => {
           const token = response.token;
@@ -92,15 +150,49 @@ export class AuthService {
           if (token) {
             const expiresInDuration = response.expiresIn;
             this.setAuthTimer(expiresInDuration);
-            this.isAuthenticated = true;
+            this.getUserIsAdmin().subscribe(
+              (isAdminUser) => {
+                if (isAdminUser) {
+                  this.isAdmin = true;
+                  this.adminStatusListener.next(true);
+                }
+              },
+              (error) => {
+                this.adminStatusListener.next(false);
+              }
+            );
+            this.getUserName().subscribe(
+              (userValue) => {
+                if (userValue) {
+                  this.userName = String(userValue);
+                  this.userNameStatusListener.next(this.userName);
+                }
+              },
+              (error) => {
+                this.userName = "Unknown";
+                this.userNameStatusListener.next("Unknown");
+              }
+            );
+            this.getCompanyForUser().subscribe(
+              (company) => {
+                if (company) {
+                  this.isAuthenticated = true;
+                  this.authStatusListener.next(true);
+                  this.router.navigate(["/dashboard"]);
+                } else {
+                  this.router.navigate(["/auth/company-selection"]);
+                }
+              },
+              (error) => {
+                this.authStatusListener.next(false);
+              }
+            );
             this.userId = response.userId;
-            this.authStatusListener.next(true);
             const now = new Date();
             const expirationDate = new Date(
               now.getTime() + expiresInDuration * 1000
             );
             this.saveAuthData(token, expirationDate, this.userId);
-            this.router.navigate(["/"]);
           }
         },
         (error) => {
@@ -132,7 +224,7 @@ export class AuthService {
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
     this.userId = null;
-    this.router.navigate(["/"]);
+    this.router.navigate(["/auth/login"]);
   }
 
   private setAuthTimer(duration: number) {
@@ -165,5 +257,47 @@ export class AuthService {
       expirationDate: new Date(expirationDate),
       userId,
     };
+  }
+
+  companySelection(body: CompanyData) {
+    this.http.post(BACKEND + "/companies/company", body).subscribe(
+      (response) => {
+        this.updateUser(response);
+      },
+      (error) => {
+        this.authStatusListener.next(false);
+      }
+    );
+  }
+
+  getCompanyForUser() {
+    return this.http.get<{
+      company: string;
+    }>(BACKEND_URL + "getCompany");
+  }
+
+  updateUser(body) {
+    this.http.patch(BACKEND_URL + "", body).subscribe(
+      (response) => {
+        this.isAuthenticated = true;
+        this.authStatusListener.next(true);
+        this.router.navigate(["/dashboard"]);
+      },
+      (error) => {
+        this.authStatusListener.next(false);
+      }
+    );
+  }
+
+  getUserIsAdmin() {
+    return this.http.get<{
+      isAdmin: boolean;
+    }>(BACKEND_URL + "getIsAdmin");
+  }
+
+  getUserName() {
+    return this.http.get<{
+      userName: string;
+    }>(BACKEND_URL + "getUserName");
   }
 }
